@@ -1,0 +1,32 @@
+{
+  "name": "yumiko",
+  "version": "0.0.1",
+  "description": "A discord bot!",
+  "main": "index.js",
+  "dependencies": {
+    "quick.db": "^6.3.2",
+    "enmap": "^5.2.4",
+    "fs": "^0.0.2",
+    "mongoose": "^5.8.6",
+    "request": "^2.88.0",
+    "discord-backup": "^2.0.3",
+    "discord.js": "^11.5.1",
+    "express": "^4.17.1",
+    "common-tags": "^1.8.0",
+    "hastebin-gen": "^2.0.5",
+    "got": "^10.2.2",
+    "url": "^0.11.0",
+    "ms": "^2.1.2",
+    "hastebin": "^0.2.1",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "author": "Mrson, Captain-x",
+  "license": "ISC"
+}
