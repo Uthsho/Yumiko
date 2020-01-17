@@ -3,7 +3,7 @@ module.exports.run = async(client, message, args, prefix, Discord) => {
   .setAuthor(message.author.tag, message.author.avatarURL)
   .setTitle(`Invite me!`)
   .setURL(`https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=2146958847%60`)
-  .setDescription(`[Join support server](https://discordapp.com/invite/N6Kwxd).`)
+  .setDescription(`[Join support server](https://discordapp.com/invite/6ScVS4V).`)
   .setFooter(client.config.footer, client.user.avatarURL)
   .setTimestamp()
   .setThumbnail(message.author.avatarURL)

@@ -49,6 +49,60 @@ fs.readdir("./commands/", (err, files) => {
   });
   
 });
+const applyText = (canvas, text) => {
+	const ctx = canvas.getContext('2d');
+
+	// Declare a base size of the font
+	let fontSize = 70;
+
+	do {
+		// Assign the font to the context and decrement it so it can be measured again
+		ctx.font = `${fontSize -= 10}px sans-serif`;
+		// Compare pixel width of the text to the canvas minus the approximate avatar size
+	} while (ctx.measureText(text).width > canvas.width - 300);
+
+	// Return the result to use in the actual canvas
+	return ctx.font;
+};
+const {formatDate} = require("./functions.js")
+const welcome = require("./mongodb/welcome");
+const Canvas = require("canvas");
+client.on("guildMemberAdd", async member => {
+  welcome.findOne({name: 'welcome', guildid: member.guild.id}).then(async result => {
+    if(!result || result == []) return;
+  const canvas = Canvas.createCanvas(700, 250);
+	const ctx = canvas.getContext('2d');
+
+	const background = await Canvas.loadImage('https://cdn.glitch.com/fb6c5eed-59c1-4da1-ae4a-6318e179cef0%2Fbackground.jpg?v=1579258115252');
+	ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+	ctx.strokeStyle = '#74037b';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	// Assign the decided font to the canvas
+	ctx.font = applyText(canvas, member.displayName + `\nYou are the ${member.guild.memberCount} member to join! \n \n We hope you have a great time here!`);
+	ctx.fillStyle = '#000000';
+	ctx.fillText(member.displayName + `\n You are the ${member.guild.memberCount} to join! \n We hope you have a great time here!`, canvas.width / 2.5, canvas.height / 1.8);
+
+	ctx.beginPath();
+	ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+	ctx.closePath();
+	ctx.clip();
+
+	const avatar = await Canvas.loadImage(member.user.displayAvatarURL);
+	ctx.drawImage(avatar, 25, 25, 200, 200);
+
+	const attachment = new Discord.Attachment(canvas.toBuffer(), 'welcome-image.png');
+    const embed = new Discord.RichEmbed()
+    .setAuthor(member.user.tag, member.user.avatarURL)
+    .setDescription(`This user was created at ${formatDate(member.user.createdAt)}`)
+    .addField("User:", member + " (" + member.user.tag + ")")
+    .addField("User id:", `${member.id}`)
+    await client.channels.get(result.channel).send(embed).then(async c => {
+      await client.channels.get(result.channel).send(attachment);
+    });
+  });
+});
 
 client.on("messageDelete", async m => {
   client.snipe.set(m.channel.id, {
@@ -57,14 +111,16 @@ client.on("messageDelete", async m => {
   })
 });
 
+
+
+
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.username}. With ${client.guilds.size} guilds.`);
   client.user.setStatus("idle");
   client.user.setActivity("Loving yourself? || " + client.config.prefix + "help")
-  client.channels.get("665534765654474762").edit({name: `${client.guilds.size} guilds`});
+  client.channels.get("667049528930598922").edit({name: `${client.guilds.size} guild`});
 });
 
-const {formatDate} = require("./functions.js")
 
 
 client.on("guildCreate", guild => {
@@ -78,8 +134,8 @@ client.on("guildCreate", guild => {
   .setFooter(`This guild was created at ${formatDate(guild.createdAt)}`)
   .setThumbnail(guild.displayAvatarURL)
   .setTimestamp()
-  client.channels.get("665535730734465024").send(embed);
-  client.channels.get("665534765654474762").edit({name: `${client.guilds.size} guilds`});
+  client.channels.get("667049545787768864").send(embed);
+  client.channels.get("667049528930598922").edit({name: `${client.guilds.size} guilds`});
 })
 
 client.on("guildDelete", guild => {
@@ -93,17 +149,27 @@ client.on("guildDelete", guild => {
   .setFooter(`This guild was created at ${formatDate(guild.createdAt)}`)
   .setThumbnail(guild.displayAvatarURL)
   .setTimestamp()
-  client.channels.get("665535924297531402").send(embed);
-  client.channels.get("665534765654474762").edit({name: `${client.guilds.size} guilds`});
+  client.channels.get("667049569980514385").send(embed);
+  client.channels.get("667049528930598922").edit({name: `${client.guilds.size} guilds`});
 });
 
 const pr = require("./mongodb/prefix");
 const swear = require("./mongodb/swear");
-const cc = require("./mongodb/cc")
+const cc = require("./mongodb/cc");
+let active = new Map();
+const Youtube = require("simple-youtube-api");
+const youtube = new Youtube(config.YOUTUBE_API_KEY);
+const loop = new Map();
+client.loop = loop;
+client.yt = youtube;
+let ops = {
+      ownerID: config.owner,
+      active: active
+    };
 client.on("message", async message => {
   if (message.author.bot) return;
   let alert = client.emojis.get("666569191175749633");
-  if(message.channel.id === "665476514971910144") {
+  /*if(message.channel.id === "665476514971910144") {
     let embed = new Discord.RichEmbed()
     .setAuthor(message.author.tag, message.author.avatarURL)
     .setFooter(client.config.footer, client.user.avatarURL)
@@ -113,8 +179,8 @@ client.on("message", async message => {
     .setTimestamp()
     message.delete().then(c => {
     client.channels.get("665476514971910144").send(embed);
-    });
-  }
+    }); 
+  } */
   swear.findOne({name: "swear", serverid: message.guild.id}).then(re => {
     if(!re || re == []) return;
     if(re.e == "enable") {
@@ -191,7 +257,7 @@ client.on("message", async message => {
   if (!command) command = client.commands.get(client.aliases.get(cmd));
 
 
-  if(command) command.run(client, message, args, prefix, Discord);
+  if(command) command.run(client, message, args, prefix, ops);
   });
   });
 });
