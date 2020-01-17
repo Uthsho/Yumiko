@@ -6,6 +6,7 @@ Please click this link to add [bot](https://discordapp.com/oauth2/authorize?clie
 
 ## Installation Guide
 There are no installation guide. Please do not steal code. Just take example of my codes.
+But if you do you gotta figure out yourself
 
 ## Contributing
 
