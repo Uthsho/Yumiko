@@ -1,9 +1,9 @@
-# Gosh-Service
+# Yumiko
 A Discord bot with great features!
 
 ## Add Bot to Your server?
-Please click this link to add [bot](https://discordapp.com/oauth2/authorize?client_id=668466732528304138&scope=bot&permissions=2146958847%60)
-
+Please click this link to add [bot](https://discordapp.com/oauth2/authorize?client_id=&scope=bot&permissions=2146958847%60)
+BOT IS DISCOUNTINUED
 ## Installation Guide
 There are no installation guide. Please do not steal code. Just take example of my codes.
 But if you do you gotta figure out yourself
